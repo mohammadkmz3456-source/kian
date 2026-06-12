@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title> (سیستم مدیریت خوراک طیور )ساخته شده توسط کیان محسنی</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tahoma', 'Segoe UI', 'Vazir', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* RTL Support */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            border-right: 4px solid #667eea;
+            padding-right: 12px;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-warning {
+            background: #fed7aa;
+            color: #92400e;
+            border: 1px solid #fed7aa;
+        }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+
+        /* Badge */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-warning {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // ==================== DATA MODELS ====================
+        const MATERIALS_LIST = [
+            'ذرت', 'کنجاله سویا', 'سبوس گندم', 'جو', 'سنگ آهک', 
+            'پوسته', 'فسفات', 'متیونین', 'لیزین'
+        ];
+
+        let currentUser = null;
+        let currentPage = 'dashboard';
+
+        // Load data from localStorage
+        let materials = [];
+        let transactions = [];
+        let stockBalance = {};
+
+        function loadData() {
+            const savedMaterials = localStorage.getItem('materials');
+            const savedTransactions = localStorage.getItem('transactions');
+            const savedStock = localStorage.getItem('stockBalance');
+
+            if (savedMaterials) {
+                materials = JSON.parse(savedMaterials);
+            } else {
+                // Initialize default materials
+                materials = MATERIALS_LIST.map((name, index) => ({
+                    id: index + 1,
+                    name: name,
+                    unit: 'kg',
+                    min_stock: index === 0 ? 1000 : (index < 3 ? 500 : 100),
+                    max_stock: index === 0 ? 10000 : (index < 3 ? 5000 : 1000),
+                    is_active: true
+                }));
+                saveMaterials();
+            }
+
+            if (savedTransactions) {
+                transactions = JSON.parse(savedTransactions);
+            } else {
+                // Sample transactions
+                transactions = [];
+                saveTransactions();
+            }
+
+            if (savedStock) {
+                stockBalance = JSON.parse(savedStock);
+            } else {
+                // Initialize stock balance
+                materials.forEach(m => {
+                    stockBalance[m.id] = 5000;
+                });
+                saveStockBalance();
+            }
+        }
+
+        function saveMaterials() {
+            localStorage.setItem('materials', JSON.stringify(materials));
+        }
+
+        function saveTransactions() {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        function saveStockBalance() {
+            localStorage.setItem('stockBalance', JSON.stringify(stockBalance));
+        }
+
+        // ==================== AUTHENTICATION ====================
+        const users = [
+            { id: 1, username: 'admin', password: 'admin123', role: 'admin', full_name: 'مدیر سیستم' },
+            { id: 2, username: 'operator', password: 'operator123', role: 'operator', full_name: 'اپراتور' }
+        ];
+
+        function login(username, password) {
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = { ...user };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                renderApp();
+                showNotification('ورود موفقیت آمیز', 'success');
+                return true;
+            }
+            showNotification('نام کاربری یا رمز عبور اشتباه است', 'danger');
+            return false;
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            renderApp();
+        }
+
+        function checkAuth() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+        }
+
+        // ==================== TRANSACTIONS ====================
+        function addTransaction(type, materialId, quantity, unitPrice = null, notes = '', sourceFarm = '', destFarm = '') {
+            const material = materials.find(m => m.id === parseInt(materialId));
+            if (!material) return false;
+
+            const transaction = {
+                id: Date.now(),
+                transaction_type: type,
+                material_id: parseInt(materialId),
+                material_name: material.name,
+                quantity: parseFloat(quantity),
+                unit_price: unitPrice ? parseFloat(unitPrice) : null,
+                total_amount: unitPrice ? parseFloat(quantity) * parseFloat(unitPrice) : null,
+                notes: notes,
+                source_farm: sourceFarm,
+                destination_farm: destFarm,
+                created_by: currentUser?.username,
+                transaction_date: new Date().toISOString().split('T')[0],
+                created_at: new Date().toISOString()
+            };
+
+            // Update stock balance
+            if (type === 'incoming') {
+                stockBalance[materialId] = (stockBalance[materialId] || 0) + parseFloat(quantity);
+            } else if (type === 'outgoing') {
+                if (stockBalance[materialId] < parseFloat(quantity)) {
+                    showNotification('موجودی کافی نیست!', 'danger');
+                    return false;
+                }
+                stockBalance[materialId] = (stockBalance[materialId] || 0) - parseFloat(quantity);
+            } else if (type === 'transfer') {
+                if (stockBalance[materialId] < parseFloat(quantity)) {
+                    showNotification('موجودی کافی نیست!', 'danger');
+                    return false;
+                }
+                stockBalance[materialId] = (stockBalance[materialId] || 0) - parseFloat(quantity);
+            }
+
+            transactions.unshift(transaction);
+            saveTransactions();
+            saveStockBalance();
+            showNotification('تراکنش با موفقیت ثبت شد', 'success');
+            return true;
+        }
+
+        function getCurrentStock(materialId) {
+            return stockBalance[materialId] || 0;
+        }
+
+        function getLowStockMaterials() {
+            return materials.filter(m => {
+                const current = getCurrentStock(m.id);
+                return current <= m.min_stock && m.is_active;
+            });
+        }
+
+        // ==================== MATERIAL MANAGEMENT ====================
+        function addMaterial(name, unit, minStock, maxStock) {
+            const newId = Math.max(...materials.map(m => m.id), 0) + 1;
+            const newMaterial = {
+                id: newId,
+                name: name,
+                unit: unit || 'kg',
+                min_stock: parseFloat(minStock) || 0,
+                max_stock: parseFloat(maxStock) || null,
+                is_active: true
+            };
+            materials.push(newMaterial);
+            stockBalance[newId] = 0;
+            saveMaterials();
+            saveStockBalance();
+            showNotification('ماده با موفقیت اضافه شد', 'success');
+            return true;
+        }
+
+        function updateMaterial(id, data) {
+            const index = materials.findIndex(m => m.id === parseInt(id));
+            if (index !== -1) {
+                materials[index] = { ...materials[index], ...data };
+                saveMaterials();
+                showNotification('ماده با موفقیت ویرایش شد', 'success');
+                return true;
+            }
+            return false;
+        }
+
+        function deleteMaterial(id) {
+            const hasTransactions = transactions.some(t => t.material_id === parseInt(id));
+            if (hasTransactions) {
+                showNotification('این ماده دارای تراکنش است و قابل حذف نمی‌باشد', 'danger');
+                return false;
+            }
+            materials = materials.filter(m => m.id !== parseInt(id));
+            delete stockBalance[id];
+            saveMaterials();
+            saveStockBalance();
+            showNotification('ماده با موفقیت حذف شد', 'success');
+            return true;
+        }
+
+        // ==================== REPORTS ====================
+        function getTransactionsByDateRange(startDate, endDate) {
+            return transactions.filter(t => {
+                const tDate = new Date(t.transaction_date);
+                const start = startDate ? new Date(startDate) : null;
+                const end = endDate ? new Date(endDate) : null;
+                if (start && tDate < start) return false;
+                if (end && tDate > end) return false;
+                return true;
+            });
+        }
+
+        function exportToExcel() {
+            const data = transactions.map(t => ({
+                'تاریخ': t.transaction_date,
+                'نوع': t.transaction_type === 'incoming' ? 'ورودی' : (t.transaction_type === 'outgoing' ? 'خروجی' : 'انتقال'),
+                'ماده': t.material_name,
+                'مقدار': t.quantity,
+                'قیمت واحد': t.unit_price || '-',
+                'مبلغ کل': t.total_amount || '-',
+                'توضیحات': t.notes || '-'
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
+            XLSX.writeFile(wb, `transactions_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showNotification('گزارش با موفقیت خروجی گرفته شد', 'success');
+        }
+
+        function exportToPDF() {
+            // Simple print-based PDF export
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html dir="rtl">
+                <head>
+                    <title>گزارش تراکنش‌ها</title>
+                    <style>
+                        body { font-family: Tahoma, Arial; padding: 20px; direction: rtl; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                        th { background: #f0f0f0; }
+                        h1 { color: #333; }
+                    </style>
+                </head>
+                <body>
+                    <h1>گزارش تراکنش‌های انبار خوراک طیور</h1>
+                    <p>تاریخ: ${new Date().toLocaleDateString('fa-IR')}</p>
+                    <table>
+                        <thead>
+                            <tr><th>تاریخ</th><th>نوع</th><th>ماده</th><th>مقدار</th><th>مبلغ کل</th></tr>
+                        </thead>
+                        <tbody>
+                            ${transactions.slice(0, 50).map(t => `
+                                <tr>
+                                    <td>${t.transaction_date}</td>
+                                    <td>${t.transaction_type === 'incoming' ? 'ورودی' : (t.transaction_type === 'outgoing' ? 'خروجی' : 'انتقال')}</td>
+                                    <td>${t.material_name}</td>
+                                    <td>${t.quantity}</td>
+                                    <td>${t.total_amount ? t.total_amount.toLocaleString() : '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+            showNotification('گزارش PDF آماده شد', 'success');
+        }
+
+        // ==================== UI RENDERING ====================
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.maxWidth = '300px';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function renderDashboard() {
+            const lowStock = getLowStockMaterials();
+            const totalMaterials = materials.filter(m => m.is_active).length;
+            const totalValue = transactions.reduce((sum, t) => sum + (t.total_amount || 0), 0);
+            const monthlyIncoming = transactions.filter(t => {
+                const date = new Date(t.transaction_date);
+                const now = new Date();
+                return t.transaction_type === 'incoming' && 
+                       date.getMonth() === now.getMonth() &&
+                       date.getFullYear() === now.getFullYear();
+            }).reduce((sum, t) => sum + t.quantity, 0);
+
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>کل مواد اولیه</h3>
+                        <div class="value">${totalMaterials}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>مواد کم‌موجود</h3>
+                        <div class="value">${lowStock.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>ارزش کل تراکنش‌ها</h3>
+                        <div class="value">${totalValue.toLocaleString()} تومان</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>ورودی ماه جاری</h3>
+                        <div class="value">${monthlyIncoming.toLocaleString()} kg</div>
+                    </div>
+                </div>
+
+                ${lowStock.length > 0 ? `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ هشدار:</strong> مواد زیر در آستانه اتمام هستند:<br>
+                        ${lowStock.map(m => `${m.name}: موجودی ${getCurrentStock(m.id)} - حداقل ${m.min_stock}`).join(' • ')}
+                    </div>
+                ` : ''}
+
+                <div class="card">
+                    <h3 class="card-title">تراکنش‌های اخیر</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>تاریخ</th><th>نوع</th><th>ماده</th><th>مقدار</th><th>مبلغ</th></tr>
+                            </thead>
+                            <tbody>
+                                ${transactions.slice(0, 10).map(t => `
+                                    <tr>
+                                        <td>${t.transaction_date}</td>
+                                        <td><span class="badge ${t.transaction_type === 'incoming' ? 'badge-success' : 'badge-danger'}">${t.transaction_type === 'incoming' ? 'ورودی' : (t.transaction_type === 'outgoing' ? 'خروجی' : 'انتقال')}</span></td>
+                                        <td>${t.material_name}</td>
+                                        <td>${t.quantity.toLocaleString()} kg</td>
+                                        <td>${t.total_amount ? t.total_amount.toLocaleString() + ' تومان' : '-'}</td>
+                                    </tr>
+                                `).join('')}
+                                ${transactions.length === 0 ? '<tr><td colspan="5" style="text-align:center">هیچ تراکنشی ثبت نشده است</td></tr>' : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInventory() {
+            return `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                        <h3 class="card-title" style="margin-bottom: 0;">مدیریت مواد اولیه</h3>
+                        <button class="btn btn-primary" onclick="showMaterialModal()">➕ افزودن ماده جدید</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="searchMaterial" placeholder="🔍 جستجوی مواد..." class="form-control" onkeyup="filterMaterials()">
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>نام ماده</th><th>واحد</th><th>موجودی فعلی</th><th>حداقل موجودی</th><th>حداکثر موجودی</th><th>وضعیت</th><th>عملیات</th></tr>
+                            </thead>
+                            <tbody id="materialsTableBody">
+                                ${materials.filter(m => m.is_active).map(m => {
+                                    const currentStock = getCurrentStock(m.id);
+                                    const status = currentStock <= m.min_stock ? 'کمبود' : (currentStock >= (m.max_stock || Infinity) ? 'تکمیل' : 'مناسب');
+                                    const statusClass = currentStock <= m.min_stock ? 'badge-danger' : (currentStock >= (m.max_stock || Infinity) ? 'badge-warning' : 'badge-success');
+                                    return `
+                                        <tr>
+                                            <td>${m.name}</td>
+                                            <td>${m.unit}</td>
+                                            <td><strong>${currentStock.toLocaleString()}</strong></td>
+                                            <td>${m.min_stock.toLocaleString()}</td>
+                                            <td>${m.max_stock ? m.max_stock.toLocaleString() : '-'}</td>
+                                            <td><span class="badge ${statusClass}">${status}</span></td>
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" onclick='editMaterial(${JSON.stringify(m)})'>✏️</button>
+                                                <button class="btn btn-danger btn-sm" onclick="deleteMaterialConfirm(${m.id})">🗑️</button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTransactions() {
+            return `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                        <h3 class="card-title" style="margin-bottom: 0;">ثبت تراکنش جدید</h3>
+                        <button class="btn btn-primary" onclick="showTransactionModal()">➕ ثبت تراکنش</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">لیست تراکنش‌ها</h3>
+                    <div class="grid-2" style="margin-bottom: 15px;">
+                        <input type="date" id="filterStartDate" placeholder="از تاریخ" onchange="filterTransactions()">
+                        <input type="date" id="filterEndDate" placeholder="تا تاریخ" onchange="filterTransactions()">
+                        <select id="filterType" onchange="filterTransactions()">
+                            <option value="">همه تراکنش‌ها</option>
+                            <option value="incoming">ورودی</option>
+                            <option value="outgoing">خروجی</option>
+                            <option value="transfer">انتقال</option>
+                        </select>
+                        <select id="filterMaterial" onchange="filterTransactions()">
+                            <option value="">همه مواد</option>
+                            ${materials.filter(m => m.is_active).map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>تاریخ</th><th>نوع</th><th>ماده</th><th>مقدار</th><th>قیمت واحد</th><th>مبلغ کل</th><th>توضیحات</th></tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                ${transactions.map(t => `
+                                    <tr>
+                                        <td>${t.transaction_date}</td>
+                                        <td><span class="badge ${t.transaction_type === 'incoming' ? 'badge-success' : (t.transaction_type === 'outgoing' ? 'badge-danger' : 'badge-warning')}">${t.transaction_type === 'incoming' ? 'ورودی' : (t.transaction_type === 'outgoing' ? 'خروجی' : 'انتقال')}</span></td>
+                                        <td>${t.material_name}</td>
+                                        <td>${t.quantity.toLocaleString()} kg</td>
+                                        <td>${t.unit_price ? t.unit_price.toLocaleString() + ' تومان' : '-'}</td>
+                                        <td>${t.total_amount ? t.total_amount.toLocaleString() + ' تومان' : '-'}</td>
+                                        <td>${t.notes || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                                ${transactions.length === 0 ? '<tr><td colspan="7" style="text-align:center">هیچ تراکنشی ثبت نشده است</td></tr>' : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderReports() {
+            return `
+                <div class="grid-2">
+                    <div class="card">
+                        <h3 class="card-title">خروجی گزارشات</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="btn btn-primary" onclick="exportToExcel()">📊 خروجی اکسل</button>
+                            <button class="btn btn-primary" onclick="exportToPDF()">📄 خروجی PDF</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">گزارش موجودی انبار</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr><th>ماده</th><th>موجودی فعلی</th><th>حداقل مجاز</th><th>وضعیت</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${materials.filter(m => m.is_active).map(m => {
+                                        const current = getCurrentStock(m.id);
+                                        const status = current <= m.min_stock ? 'کمبود' : 'مناسب';
+                                        const statusClass = current <= m.min_stock ? 'badge-danger' : 'badge-success';
+                                        return `
+                                            <tr>
+                                                <td>${m.name}</td>
+                                                <td><strong>${current.toLocaleString()} kg</strong></td>
+                                                <td>${m.min_stock.toLocaleString()} kg</td>
+                                                <td><span class="badge ${statusClass}">${status}</span></td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApp() {
+            const app = document.getElementById('app');
+            
+            if (!currentUser) {
+                // Login screen
+                app.innerHTML = `
+                    <div class="login-container">
+                        <div class="login-box">
+                            <h2 style="text-align: center; margin-bottom: 20px; color: #333;">سیستم مدیریت خوراک طیور</h2>
+                            <p style="text-align: center; color: #666; margin-bottom: 30px;">ورود به سیستم</p>
+                            <form onsubmit="event.preventDefault(); login(document.getElementById('username').value, document.getElementById('password').value)">
+                                <div class="form-group">
+                                    <label>نام کاربری</label>
+                                    <input type="text" id="username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>رمز عبور</label>
+                                    <input type="password" id="password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">ورود</button>
+                            </form>
+                            <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #999;">
+                                <p>admin / admin123</p>
+                                <p>operator / operator123</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Main app
+            let content = '';
+            switch(currentPage) {
+                case 'dashboard':
+                    content = renderDashboard();
+                    break;
+                case 'inventory':
+                    content = renderInventory();
+                    break;
+                case 'transactions':
+                    content = renderTransactions();
+                    break;
+                case 'reports':
+                    content = renderReports();
+                    break;
+                default:
+                    content = renderDashboard();
+            }
+
+            app.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <h1>🐔 سیستم مدیریت خوراک طیور(سازنده:کیان محسنی)</h1>
+                        <div class="user-info">
+                            <div>
+                                <span>👤 ${currentUser.full_name} (${currentUser.role === 'admin' ? 'مدیر' : 'اپراتور'})</span>
+                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="logout()">🚪 خروج</button>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-tabs">
+                        <button class="nav-tab ${currentPage === 'dashboard' ? 'active' : ''}" onclick="changePage('dashboard')">📊 داشبورد</button>
+                        <button class="nav-tab ${currentPage === 'inventory' ? 'active' : ''}" onclick="changePage('inventory')">📦 مدیریت مواد</button>
+                        <button class="nav-tab ${currentPage === 'transactions' ? 'active' : ''}" onclick="changePage('transactions')">🔄 تراکنش‌ها</button>
+                        <button class="nav-tab ${currentPage === 'reports' ? 'active' : ''}" onclick="changePage('reports')">📈 گزارشات</button>
+                    </div>
+                    
+                    ${content}
+                </div>
+
+                <!-- Material Modal -->
+                <div id="materialModal" class="modal">
+                    <div class="modal-content">
+                        <h3 id="materialModalTitle">افزودن ماده جدید</h3>
+                        <form id="materialForm" onsubmit="event.preventDefault(); saveMaterial()">
+                            <div class="form-group">
+                                <label>نام ماده</label>
+                                <select id="materialNameSelect" onchange="handleMaterialNameChange()">
+                                    <option value="">انتخاب کنید...</option>
+                                    ${MATERIALS_LIST.map(name => `<option value="${name}">${name}</option>`).join('')}
+                                    <option value="custom">سفارشی</option>
+                                </select>
+                                <input type="text" id="materialNameCustom" placeholder="نام ماده سفارشی" style="display: none; margin-top: 10px;">
+                            </div>
+                            <div class="form-group">
+                                <label>واحد</label>
+                                <select id="materialUnit">
+                                    <option value="kg">کیلوگرم</option>
+                                    <option value="g">گرم</option>
+                                    <option value="ton">تن</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>حداقل موجودی</label>
+                                <input type="number" id="materialMinStock" value="100">
+                            </div>
+                            <div class="form-group">
+                                <label>حداکثر موجودی</label>
+                                <input type="number" id="materialMaxStock" placeholder="اختیاری">
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" class="btn btn-primary">ذخیره</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeMaterialModal()">انصراف</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Transaction Modal -->
+                <div id="transactionModal" class="modal">
+                    <div class="modal-content">
+                        <h3>ثبت تراکنش جدید</h3>
+                        <form id="transactionForm" onsubmit="event.preventDefault(); saveTransaction()">
+                            <div class="form-group">
+                                <label>نوع تراکنش</label>
+                                <select id="transactionType" required onchange="toggleTransactionFields()">
+                                    <option value="incoming">ورود به انبار</option>
+                                    <option value="outgoing">خروج از انبار</option>
+                                    <option value="transfer">انتقال بین مزارع</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>ماده اولیه</label>
+                                <select id="transactionMaterial" required>
+                                    <option value="">انتخاب کنید...</option>
+                                    ${materials.filter(m => m.is_active).map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>مقدار (کیلوگرم)</label>
+                                <input type="number" id="transactionQuantity" step="0.01" required>
+                            </div>
+                            <div class="form-group" id="priceField">
+                                <label>قیمت واحد (تومان)</label>
+                                <input type="number" id="transactionPrice" step="1000">
+                            </div>
+                            <div class="form-group">
+                                <label>تاریخ</label>
+                                <input type="date" id="transactionDate" value="${new Date().toISOString().split('T')[0]}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>توضیحات</label>
+                                <textarea id="transactionNotes" rows="2"></textarea>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" class="btn btn-primary">ثبت تراکنش</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeTransactionModal()">انصراف</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            // Attach global functions
+            window.filterMaterials = filterMaterials;
+            window.filterTransactions = filterTransactions;
+        }
+
+        // ==================== GLOBAL FUNCTIONS ====================
+        let currentEditingMaterial = null;
+
+        window.changePage = (page) => {
+            currentPage = page;
+            renderApp();
+        };
+
+        window.showMaterialModal = (material = null) => {
+            currentEditingMaterial = material;
+            const modal = document.getElementById('materialModal');
+            const title = document.getElementById('materialModalTitle');
+            const nameSelect = document.getElementById('materialNameSelect');
+            const nameCustom = document.getElementById('materialNameCustom');
+            
+            if (material) {
+                title.textContent = 'ویرایش ماده';
+                if (MATERIALS_LIST.includes(material.name)) {
+                    nameSelect.value = material.name;
+                    nameCustom.style.display = 'none';
+                } else {
+                    nameSelect.value = 'custom';
+                    nameCustom.style.display = 'block';
+                    nameCustom.value = material.name;
+                }
+                document.getElementById('materialUnit').value = material.unit;
+                document.getElementById('materialMinStock').value = material.min_stock;
+                document.getElementById('materialMaxStock').value = material.max_stock || '';
+            } else {
+                title.textContent = 'افزودن ماده جدید';
+                nameSelect.value = '';
+                nameCustom.style.display = 'none';
+                document.getElementById('materialUnit').value = 'kg';
+                document.getElementById('materialMinStock').value = '100';
+                document.getElementById('materialMaxStock').value = '';
+            }
+            modal.classList.add('active');
+        };
+
+        window.closeMaterialModal = () => {
+            document.getElementById('materialModal').classList.remove('active');
+            currentEditingMaterial = null;
+        };
+
+        window.saveMaterial = () => {
+            let name = document.getElementById('materialNameSelect').value;
+            const customName = document.getElementById('materialNameCustom').value;
+            if (name === 'custom') {
+                if (!customName) {
+                    showNotification('لطفاً نام ماده را وارد کنید', 'danger');
+                    return;
+                }
+                name = customName;
+            }
+            if (!name) {
+                showNotification('لطفاً نام ماده را انتخاب کنید', 'danger');
+                return;
+            }
+            
+            const unit = document.getElementById('materialUnit').value;
+            const minStock = document.getElementById('materialMinStock').value;
+            const maxStock = document.getElementById('materialMaxStock').value;
+            
+            if (currentEditingMaterial) {
+                updateMaterial(currentEditingMaterial.id, {
+                    name, unit, min_stock: minStock, max_stock: maxStock || null
+                });
+            } else {
+                addMaterial(name, unit, minStock, maxStock);
+            }
+            
+            closeMaterialModal();
+            renderApp();
+        };
+
+        window.editMaterial = (material) => {
+            showMaterialModal(material);
+        };
+
+        window.deleteMaterialConfirm = (id) => {
+            if (confirm('آیا از حذف این ماده اطمینان دارید؟')) {
+                deleteMaterial(id);
+                renderApp();
+            }
+        };
+
+        window.showTransactionModal = () => {
+            document.getElementById('transactionModal').classList.add('active');
+            toggleTransactionFields();
+        };
+
+        window.closeTransactionModal = () => {
+            document.getElementById('transactionModal').classList.remove('active');
+        };
+
+        window.toggleTransactionFields = () => {
+            const type = document.getElementById('transactionType').value;
+            const priceField = document.getElementById('priceField');
+            priceField.style.display = type === 'transfer' ? 'none' : 'block';
+        };
+
+        window.saveTransaction = () => {
+            const type = document.getElementById('transactionType').value;
+            const materialId = document.getElementById('transactionMaterial').value;
+            const quantity = document.getElementById('transactionQuantity').value;
+            const price = document.getElementById('transactionPrice').value;
+            const date = document.getElementById('transactionDate').value;
+            const notes = document.getElementById('transactionNotes').value;
+            
+            if (!materialId || !quantity) {
+                showNotification('لطفاً همه فیلدهای required را پر کنید', 'danger');
+                return;
+            }
+            
+            // Temporarily change date for transaction
+            const originalDate = new Date();
+            addTransaction(type, materialId, quantity, price || null, notes);
+            closeTransactionModal();
+            renderApp();
+        };
+
+        window.filterMaterials = () => {
+            const searchTerm = document.getElementById('searchMaterial')?.value.toLowerCase() || '';
+            const tbody = document.getElementById('materialsTableBody');
+            if (tbody) {
+                const rows = materials.filter(m => m.is_active && m.name.toLowerCase().includes(searchTerm));
+                tbody.innerHTML = rows.map(m => {
+                    const currentStock = getCurrentStock(m.id);
+                    const status = currentStock <= m.min_stock ? 'کمبود' : (currentStock >= (m.max_stock || Infinity) ? 'تکمیل' : 'مناسب');
+                    const statusClass = currentStock <= m.min_stock ? 'badge-danger' : (currentStock >= (m.max_stock || Infinity) ? 'badge-warning' : 'badge-success');
+                    return `
+                        <tr>
+                            <td>${m.name}</td>
+                            <td>${m.unit}</td>
+                            <td><strong>${currentStock.toLocaleString()}</strong></td>
+                            <td>${m.min_stock.toLocaleString()}</td>
+                            <td>${m.max_stock ? m.max_stock.toLocaleString() : '-'}</td>
+                            <td><span class="badge ${statusClass}">${status}</span></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick='editMaterial(${JSON.stringify(m)})'>✏️</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteMaterialConfirm(${m.id})">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        };
+
+        window.filterTransactions = () => {
+            const startDate = document.getElementById('filterStartDate')?.value;
+            const endDate = document.getElementById('filterEndDate')?.value;
+            const type = document.getElementById('filterType')?.value;
+            const materialId = document.getElementById('filterMaterial')?.value;
+            
+            let filtered = [...transactions];
+            if (startDate) filtered = filtered.filter(t => t.transaction_date >= startDate);
+            if (endDate) filtered = filtered.filter(t => t.transaction_date <= endDate);
+            if (type) filtered = filtered.filter(t => t.transaction_type === type);
+            if (materialId) filtered = filtered.filter(t => t.material_id === parseInt(materialId));
+            
+            const tbody = document.getElementById('transactionsTableBody');
+            if (tbody) {
+                tbody.innerHTML = filtered.map(t => `
+                    <tr>
+                        <td>${t.transaction_date}</td>
+                        <td><span class="badge ${t.transaction_type === 'incoming' ? 'badge-success' : (t.transaction_type === 'outgoing' ? 'badge-danger' : 'badge-warning')}">${t.transaction_type === 'incoming' ? 'ورودی' : (t.transaction_type === 'outgoing' ? 'خروجی' : 'انتقال')}</span></td>
+                        <td>${t.material_name}</td>
+                        <td>${t.quantity.toLocaleString()} kg</td>
+                        <td>${t.unit_price ? t.unit_price.toLocaleString() + ' تومان' : '-'}</td>
+                        <td>${t.total_amount ? t.total_amount.toLocaleString() + ' تومان' : '-'}</td>
+                        <td>${t.notes || '-'}</td>
+                    </tr>
+                `).join('');
+                if (filtered.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">هیچ تراکنشی یافت نشد</td></tr>';
+                }
+            }
+        };
+
+        window.handleMaterialNameChange = () => {
+            const select = document.getElementById('materialNameSelect');
+            const customInput = document.getElementById('materialNameCustom');
+            if (select.value === 'custom') {
+                customInput.style.display = 'block';
+            } else {
+                customInput.style.display = 'none';
+            }
+        };
+
+        // Initialize
+        loadData();
+        checkAuth();
+        renderApp();
+    </script>
+
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+</body>
+</html>
